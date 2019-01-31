@@ -85,3 +85,5 @@ function __webpack_require__(moduleId) {
 - 第一个元素是一个数组，["0"]表示该js文件所包含的所有chunk的id（可以粗略理解为，webpack中module组成chunk，chunk又组成file）；
 - 第二个元素是一个对象，键是各个模块的id，值则是一个被function包装后的模块；
 - 第三个元素也是一个数组，其又是由多个数组组成。
+
+>commonJs的模块，实质上导出了一个闭包函数，import时new了这个函数并缓存。
