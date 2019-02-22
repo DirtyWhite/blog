@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="icon" href="">
+    <title>{{{htmlWebpackPlugin.options.title}}}</title>
+
+    {{^htmlWebpackPlugin.options.isDev}}
+    <script>window.__webpack_public_path__ = '<%= cdn %>'</script>
+    {{/htmlWebpackPlugin.options.isDev}}
+
+    {{#htmlWebpackPlugin.options.isDev}}
+    <script>window.__webpack_public_path__ = '/'</script>
+    <script src="https://cdn.bootcss.com/vConsole/1.2.0/vconsole.min.js"></script>
+    {{/htmlWebpackPlugin.options.isDev}}
+    <script>
+        window.closeDevice = /openDevice=1/.test(location.href) ? 0 : 1;
+    </script>
+    <script>
+        var c;
+        function widthScale(a) {
+            function b() {
+                if (a.navigator.appVersion.match(/window|ipad/gi)) {
+                    m = f.getBoundingClientRect().width > 960 ? 720 : f.getBoundingClientRect().width;
+                } else {
+                    m = f.getBoundingClientRect().width;
+                }
+                a.rem = m / 18.75;
+                f.style.fontSize = a.rem + "px";
+            }
+            var d = a.navigator.appVersion.match(/iphone/gi) ? a.devicePixelRatio : 1,
+                e = 1 / d,
+                f = document.documentElement,
+                g = document.createElement("meta");
+            if (a.dpr = d, a.addEventListener("resize", function () { clearTimeout(c), c = setTimeout(b, 300) }, !1), a.addEventListener("pageshow", function (a) {
+                a.persisted && (clearTimeout(c), c = setTimeout(b, 300))
+            }, !1), f.setAttribute("data-dpr", d),
+                g.setAttribute("name", "viewport"), g.setAttribute("content", "initial-scale=" + e + ", maximum-scale=" + e + ", minimum-scale=" + e + ", user-scalable=no"),
+                f.firstElementChild) f.firstElementChild.appendChild(g);
+            else {
+                var h = document.createElement("div");
+                h.appendChild(g), document.write(h.innerHTML)
+            }
+            b()
+        }
+        function heightScale(a) {
+            function b() {
+                if (a.navigator.appVersion.match(/window|ipad/gi)) {
+                    m = f.getBoundingClientRect().height > 960 ? 720 : f.getBoundingClientRect().height;
+                } else {
+                    m = f.getBoundingClientRect().height;
+                }
+                a.rem = m / 29.1;
+                f.style.fontSize = a.rem + "px";
+            }
+            var d = a.navigator.appVersion.match(/iphone/gi) ? a.devicePixelRatio : 1,
+                e = 1 / d,
+                f = document.documentElement,
+                g = document.createElement("meta");
+            if (a.dpr = d, a.addEventListener("resize", function () { clearTimeout(c), c = setTimeout(b, 300) }, !1), a.addEventListener("pageshow", function (a) {
+                a.persisted && (clearTimeout(c), c = setTimeout(b, 300))
+            }, !1), f.setAttribute("data-dpr", d),
+                g.setAttribute("name", "viewport"), g.setAttribute("content", "initial-scale=" + e + ", maximum-scale=" + e + ", minimum-scale=" + e + ", user-scalable=no"),
+                f.firstElementChild) f.firstElementChild.appendChild(g);
+            else {
+                var h = document.createElement("div");
+                h.appendChild(g), document.write(h.innerHTML)
+            }
+            b()
+        }
+        widthScale(window);
+    </script>
+</head>
+
+<body>
+    <div id=app></div>
+
+    {{^htmlWebpackPlugin.options.isDev}}
+    <script src="http://m.img4399.com/rds/base/js/vue-2.5.16.min.js"></script>
+
+    <% if(process.env.NODE_ENV=="test") { %>
+    <% } %>
+    <% if(process.env.NODE_ENV=="ot") { %>
+    <% } %>
+    <% if(process.env.NODE_ENV=="online") { %>
+    <% } %>
+
+    {{/htmlWebpackPlugin.options.isDev}}
+
+    {{#htmlWebpackPlugin.options.isDev}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+    {{/htmlWebpackPlugin.options.isDev}}
+
+    <script src="http://m.img4399.com/rds/base/js/vuex-3.0.1.min.js"></script>
+    <script src="http://m.img4399.com/rds/base/js/vue-router-3.0.1.min.js"></script>
+
+
+</body>
+
+</html>
