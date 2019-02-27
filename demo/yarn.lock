@@ -5470,6 +5470,11 @@ stackframe@^1.0.4:
   version "1.0.4"
   resolved "http://registry.npm.taobao.org/stackframe/download/stackframe-1.0.4.tgz#357b24a992f9427cba6b545d96a14ed2cbca187b"
 
+stat@^0.0.5:
+  version "0.0.5"
+  resolved "http://registry.npm.taobao.org/stat/download/stat-0.0.5.tgz#dc425664ea204869cb99f7e5956ad7592c7e0ef3"
+  integrity sha1-3EJWZOogSGnLmffllWrXWSx+DvM=
+
 static-extend@^0.1.1:
   version "0.1.2"
   resolved "http://registry.npm.taobao.org/static-extend/download/static-extend-0.1.2.tgz#60809c39cbff55337226fd5e0b520f341f1fb5c6"
@@ -5656,6 +5661,11 @@ tar@^4:
     mkdirp "^0.5.0"
     safe-buffer "^5.1.2"
     yallist "^3.0.2"
+
+three-orbitcontrols@^2.101.1:
+  version "2.101.1"
+  resolved "http://registry.npm.taobao.org/three-orbitcontrols/download/three-orbitcontrols-2.101.1.tgz#5361507eb78b1c509b26a90489456a35a923ec26"
+  integrity sha1-U2FQfreLHFCbJqkEiUVqNakj7CY=
 
 three@^0.101.1:
   version "0.101.1"
