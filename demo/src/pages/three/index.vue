@@ -46,18 +46,30 @@ import {
   TextureLoader,
   RepeatWrapping,
   Quaternion,
-  Texture
+  Texture,
+  RectAreaLight,
+  PointLightHelper,
+  SpotLightShadow,
+  DoubleSide,
+  FileLoader,
+  ObjectLoader,
+  GridHelper,
+  PlaneBufferGeometry,
+  MeshPhysicalMaterial,
+  MeshStandardMaterial
 } from "three/src/Three";
 import control from "three-orbitcontrols";
+import fbxLoader from "three-fbx-loader";
+import { tween } from "popmotion";
 
 const image = require("@/images/demo.png");
+const font = require("@/lib/font.json");
 
 Component.registerHooks(["beforeRouteEnter", "beforeRouteLeave"]);
-const font = require("@/lib/font.json");
 @Component({
   components: {}
 })
-export default class webGLDemo extends Vue {
+export default class ThreeDemo extends Vue {
   el: HTMLCanvasElement;
 
   scene: Scene;
@@ -68,119 +80,63 @@ export default class webGLDemo extends Vue {
 
   mounted() {
     this.initScene();
-    this.initControl();
-    // this.draw();
     this.animation();
     this.renderLoop();
-  }
-
-  initControl() {
-    const controls = new control(this.camera, this.renderer.domElement);
   }
 
   initScene() {
     this.el = document.querySelector("#three");
     this.scene = new Scene();
-
     this.renderer = new WebGLRenderer({
       canvas: this.el
     });
-    this.renderer.setClearColor(0x888888);
-  }
-  draw() {
-    const loader = new TextureLoader();
-    loader.load(image as string, texture => {
-      texture.wrapS = texture.wrapT = RepeatWrapping;
-      texture.repeat.set(2, 2);
-      const box = new BoxGeometry(1, 1, 1);
-      const material = new MeshPhongMaterial({
-        // emissive: 0x333333,
-        // specular: 0xffffff,
-        map: texture
-        // opacity: 0.9,
-        // transparent: true
-      });
-      this.box = new Mesh(box, material);
-      this.box.rotation.setFromQuaternion(new Quaternion(-0.1));
-      this.scene.add(this.box);
-    });
+    this.renderer.setClearColor(0xffffff);
 
-    // const plane = new PlaneGeometry(3, 3);
-    // const planeMaterial = new MeshBasicMaterial({
-    //   color: 0xffffff
-    // });
-    // const planeObj = new Mesh(plane, planeMaterial);
-    // this.scene.add(planeObj);
+    this.camera = new PerspectiveCamera(
+      45,
+      this.el.width / this.el.height,
+      1,
+      1000
+    );
+    this.camera.position.set(10, 10, 10);
+    this.camera.lookAt(0, 0, 0);
+    this.scene.add(this.camera);
 
-    // const ball = new SphereGeometry(1, 100, 100);
-    // const ballMaterial = new MeshPhongMaterial({
-    //   specular: 0xffff00
-    //   // shininess: 30
-    // });
-    // const ballObj = new Mesh(ball, ballMaterial);
-    // this.scene.add(ballObj);
-    // const circle = new CircleGeometry(1);
-    // const circleMaterial = new MeshBasicMaterial({
-    //   color: 0xff00ff,
-    //   wireframe: true
-    // });
-    // const circleObj = new Mesh(circle, circleMaterial);
-    // this.scene.add(circleObj);
-    // const cylinder = new CylinderGeometry(2, 1, 2, 100, 30);
-    // const cylinderMaterial = new MeshBasicMaterial({
-    //   color: 0xff00ff,
-    //   wireframe: true
-    // });
-    // const cylinderObj = new Mesh(cylinder, cylinderMaterial);
-    // this.scene.add(cylinderObj);
-    // const cylinder = new TetrahedronGeometry(1);
-    // const cylinderMaterial = new MeshBasicMaterial({
-    //   color: 0xff00ff,
-    //   wireframe: true
-    // });
-    // const cylinderObj = new Mesh(cylinder, cylinderMaterial);
-    // this.scene.add(cylinderObj);
-    // const loadedFont = new Font(font);
-    // const textGeometry = new TextGeometry("A", {
-    //   font: loadedFont,
-    //   size: 1,
-    //   height: 1
-    // });
-    // const fontMaterial = new MeshBasicMaterial({
-    //   color: 0xffff,
-    //   opacity: 0.5
-    //   // wireframe: true
-    // });
-    // const text = new Mesh(textGeometry, fontMaterial);
-    // this.scene.add(text);
-    // const cylinder = new TorusGeometry(1, 0.2, 3, 100);
-    // const cylinderMaterial = new MeshBasicMaterial({
-    //   color: 0xff00ff,
-    //   wireframe: true
-    // });
-    // const cylinderObj = new Mesh(cylinder, cylinderMaterial);
-    // this.scene.add(cylinderObj);
+    this.light = new DirectionalLight(0xffffff, 1);
+    this.light.position.set(3000, 10000, -3000);
+    this.scene.add(this.light);
+
+    const controls = new control(this.camera, this.renderer.domElement);
   }
 
   animation() {
-    const ball = new Mesh(
-      new SphereGeometry(1, 100, 100),
+    let loader = new fbxLoader() as ObjectLoader;
+    loader.load("/static/models/工厂.fbx", object => {
+      object.scale.set(0.003, 0.003, 0.003);
+      object.position.y = 1.5;
+      this.scene.add(object);
+    });
+    const mesh = new Mesh(
+      new PlaneBufferGeometry(2000, 2000),
       new MeshLambertMaterial({
-        color: 0xffff00
+        color: 0xeeeeee,
+        side: DoubleSide
       })
     );
-    ball.position.y = 0;
-    this.scene.add(ball);
+    mesh.rotation.x = -Math.PI / 2;
+    mesh.receiveShadow = true;
+    this.scene.add(mesh);
+  }
 
-    const loader = new TextureLoader();
-    loader.load(image as string, texture => {
-      const plane = new Mesh(
-        new PlaneGeometry(3, 3),
-        new MeshLambertMaterial({ map: texture })
-      );
-      plane.rotation.x = (-Math.PI / 2) * 5;
-      this.scene.add(plane);
-    });
+  run(ball) {
+    let rotate = 0;
+    let initTime;
+    const run = time => {
+      ball.rotation.y = rotate;
+      rotate += 0.01;
+      requestAnimationFrame(run);
+    };
+    requestAnimationFrame(run);
   }
 
   renderLoop() {
@@ -191,7 +147,7 @@ export default class webGLDemo extends Vue {
   render(h) {
     return (
       <div class="threeDemo">
-        <canvas id="three" width="500" height="500" style="margin:0 auto;" />
+        <canvas id="three" width="1000" height="800" style="margin:0 auto;" />
       </div>
     );
   }

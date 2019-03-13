@@ -11,7 +11,7 @@ Component.registerHooks(["beforeRouteEnter", "beforeRouteLeave"]);
 @Component({
   components: {}
 })
-export default class webGLDemo extends Vue {
+export default class threeDemo extends Vue {
   el: HTMLCanvasElement;
   gl: WebGLRenderingContext;
   glProgram;
@@ -29,11 +29,11 @@ export default class webGLDemo extends Vue {
     }
   `;
   mounted() {
-    this.el = document.querySelector("#webGL");
-    this.gl = this.el.getContext("webgl");
-    this.glProgram = this.initShaders();
-    this.initStage();
-    this.drawRect();
+    // this.el = document.querySelector("#webGL");
+    // this.gl = this.el.getContext("webgl");
+    // this.glProgram = this.initShaders();
+    // this.initStage();
+    // this.drawRect();
   }
   initShaders() {
     const { gl, loadShader, VSHADER_SOURCE, FSHADER_SOURCE } = this;
