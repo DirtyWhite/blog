@@ -1,4 +1,5 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, MeshDepthMaterial, BoxGeometry, Mesh, DirectionalLight, MeshLambertMaterial, MeshPhongMaterial } from 'three/src/Three'
+import { Scene, PerspectiveCamera, WebGLRenderer, MeshDepthMaterial, BoxGeometry, Mesh, DirectionalLight, MeshLambertMaterial, MeshPhongMaterial, Vector3, ParametricGeometry, DoubleSide, FlatShading } from 'three/src/Three'
+import control from "three-orbitcontrols";
 require('./style.scss')
 
 // /**
@@ -23,19 +24,21 @@ const renderer = new WebGLRenderer({
 });
 renderer.setClearColor(0xeeeeee);
 renderer.setSize(parseFloat(rootStyle.width), parseFloat(rootStyle.height))
+
+new control(camera, renderer.domElement);
+
 /**
  * 初始化一个物体
  */
 const gemotery = new BoxGeometry(3, 3, 3);
-const material = new MeshPhongMaterial({ color: 0x0000ff })
+const material = new MeshLambertMaterial({ color: 0x0000ff })
 const cube = new Mesh(gemotery, material);
 scene.add(cube);
-
 
 function animate() {
     cube.rotation.x += .01
     cube.rotation.y += .01
-    cube.rotation.z += .01
+    // cube.rotation.z += .01
     requestAnimationFrame(animate)
 }
 
