@@ -1,0 +1,96 @@
+/**
+*混合工具函数等
+*/
+
+@function re($px) {
+    @return $px / 20 / 2 + rem;
+}
+
+$base: "../../images/";
+
+@mixin bg($url) {
+    background-image: url(#{$base + $url});
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+@mixin wh($width, $height) {
+    width: $width;
+    height: $height;
+}
+
+@mixin whr($width, $height) {
+    width: re($width);
+    height: re($height);
+}
+
+@mixin placeHold($w, $h) {
+    background-image: url(#{"http://placehold.it/" + $w + "x" + $h});
+}
+
+/* 文字单方截断 */
+@mixin textOver {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 各类居中 */
+@mixin center1 {
+    margin: 0 auto;
+}
+
+@mixin center2 {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+@mixin center2X {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@mixin center2Y {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+@mixin center3($left, $top) {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -$left;
+    margin-top: -$top;
+}
+
+@mixin center3X($left) {
+    position: absolute;
+    left: 50%;
+    margin-left: -$left;
+}
+
+@mixin center3Y($top) {
+    position: absolute;
+    top: 50%;
+    margin-top: -$top;
+}
+
+/* inline-block 垂直居中 */
+@mixin childMiddle() {
+    font-size: 0;
+    &:after {
+        content: '';
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+    }
+    &>* {
+        display: inline-block;
+        vertical-align: middle;
+    }
+}

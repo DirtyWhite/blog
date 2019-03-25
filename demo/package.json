@@ -67,7 +67,7 @@
     "popmotion": "^8.4.1",
     "rxjs": "^6.3.3",
     "stat": "^0.0.5",
-    "three": "^0.101.1",
+    "three": "^0.102.1",
     "three-fbx-loader": "^1.0.3",
     "three-orbitcontrols": "^2.101.1",
     "vue": "^2.5.17",

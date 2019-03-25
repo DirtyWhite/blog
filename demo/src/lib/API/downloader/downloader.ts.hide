@@ -1,0 +1,134 @@
+// /**
+//  * 实现下载的逻辑
+//  * 1.主动获取某个包的状态
+//  * 2.主动监听和取消某个包的状态监听
+//  * 3.对包执行操作（下载、暂停、安装、启动）
+//  * 4.监听所有包的下载进度
+//  */
+// class downloader {
+
+//     constructor() {
+
+//     }
+
+//     private downloadAPI = window['downloadAPI'] || window['android']
+
+//     bindEvent() {
+//         window['mapApps'] = this.mapApps;
+//         window['updateApps'] = this.updateApps;
+//         window['updateProgress'] = this.updateProgress;
+//     }
+
+//     config = {
+
+//     }
+
+//     curProgress
+
+//     keyMap = {
+//         "0": {
+//             text: '下载游戏',
+//             action: () => {
+//                 this.download();
+//                 // gbAPI.jumpToGameDetail(gameId)
+//             }
+//         },
+//         "100": {
+//             downloading: true,
+//             text: '正在下载',
+//             action: () => {
+//                 this.download();
+//                 this.updateProgress({ progress: null })
+//             }
+//         },
+//         "101": {
+
+//             text: '继续下载',
+//             action: () => {
+//                 this.download();
+//                 this.updateProgress({ progress: this.curProgress })
+//             }
+//         },
+//         "102": {
+//             text: '准备下载',
+//             action: () => {
+//                 this.download();
+//                 this.updateProgress({ progress: null })
+//             }
+//         },
+//         "103": {
+//             text: '安装游戏',
+//             action: () => {
+//                 this.install()
+//             }
+//         },
+//         "201": {
+//             text: '马上玩',
+//             action: () => {
+//                 this.launch();
+//             }
+//         },
+//     }
+
+//     state:Array<{
+//         package: string
+//     }>
+
+
+
+//     mapApps = (cb) => {
+//         let key = cb[0].status
+//         this.state = this.keyMap[key];
+//     }
+
+//     updateApps = (cb) => {
+//         let key = cb.status
+//         this.state = this.keyMap[key];
+//         this.updateCallback(this.state);
+//     }
+
+//     updateProgress = ({ progress }) => {
+//         this.curProgress = progress;
+//         this.updateProgressCallback({ progress: this.state.downloading ? progress : null })
+//     }
+
+//     updateCallback
+
+//     updateProgressCallback
+
+//     packageName = gamePackageName;
+
+//     getAppState = () => {
+//         this.downloadAPI.getAppStatus(this.packageName, "mapApps");
+//     }
+
+//     install = () => {
+//         this.downloadAPI.installApp(this.packageName);
+//     }
+
+//     download = () => {
+//         let data = window['packageInfo'] ? window['packageInfo'] : packageInfo
+//         this.downloadAPI.downloadApp(JSON.stringify(data));
+//     }
+
+//     launch = () => {
+//         tryGame();
+//         // this.downloadAPI.launchApp(this.packageName);
+//     }
+
+//     halt = () => {
+//         this.downloadAPI.halt(this.packageName);
+//     }
+
+//     watch = (callback: (state) => any) => {
+//         this.downloadAPI.bindEvent("download", "updateApps");
+//         this.updateCallback = callback
+//     }
+
+//     progress = (callback: ({ progress }) => any) => {
+//         this.updateProgressCallback = callback;
+//         this.downloadAPI.bindEvent('progress', 'updateProgress');
+//     }
+// }
+
+// export default new downloader();

@@ -5680,10 +5680,10 @@ three-orbitcontrols@^2.101.1:
   resolved "http://registry.npm.taobao.org/three-orbitcontrols/download/three-orbitcontrols-2.101.1.tgz#5361507eb78b1c509b26a90489456a35a923ec26"
   integrity sha1-U2FQfreLHFCbJqkEiUVqNakj7CY=
 
-three@^0.101.1:
-  version "0.101.1"
-  resolved "http://registry.npm.taobao.org/three/download/three-0.101.1.tgz#e7681ef52f4e572cb84f307f16f540c457030ec6"
-  integrity sha1-52ge9S9OVyy4TzB/FvVAxFcDDsY=
+three@^0.102.1:
+  version "0.102.1"
+  resolved "http://registry.npm.taobao.org/three/download/three-0.102.1.tgz#fc08b6b11860cf59e8cd45b7e90e34d1d1a8cbd6"
+  integrity sha1-/Ai2sRhgz1nozUW36Q400dGoy9Y=
 
 three@^0.89.0:
   version "0.89.0"
