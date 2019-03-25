@@ -2,16 +2,6 @@ __webpack_public_path__ = window["__webpack_public_path__"]
 
 /**if you need */
 import 'babel-polyfill';
-import Vue from 'vue'
-import router from '@/router/index'
-import store from '@/store'
-import index from './index.vue'
-import mixin from '@/mixin';
-Vue.mixin(mixin);
+import home from '@/pages/home';
 
-
-new Vue({
-    router,
-    store,
-    render: h => h(index),
-}).$mount('#app')
+new home();
