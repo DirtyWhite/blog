@@ -1,20 +1,17 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, DirectionalLight } from 'three/src/Three'
 import control from "three-orbitcontrols";
 import { FLOOR_SIZE, SPEED, FPS } from '@/baseConfig';
-import sceneBuilder from './scene'
+import Ground from './ground'
 import { interval } from 'rxjs';
 import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
+import { share, tap } from 'rxjs/operators';
 require('./home.scss')
 
-export default class Home {
+export class Home {
 
-    private static readonly singleton = new Home();
+    constructor() {
 
-    public static get instance() {
-        return Home.singleton
     }
-
-    private constructor() { }
 
     readonly root = document.querySelector('#canvas') as HTMLCanvasElement
     readonly rootStyle = window.getComputedStyle(this.root, null);
@@ -30,13 +27,15 @@ export default class Home {
     );
     readonly mainLight = new DirectionalLight(0xffffff, 1)
 
-    private tick$ = interval(SPEED)
-
-    public fps$ = interval(1000 / FPS, animationFrame)
 
 
-    public main(): void {
+    public readonly fps$ = interval(1000 / FPS, animationFrame).pipe(
+        share()
+    )
+
+    public main() {
         this.init();
+        this.render();
     }
 
     private init() {
@@ -68,18 +67,22 @@ export default class Home {
 
     private initControl() {
         const { mainLight, mainCamera } = this;
-        new control(mainLight, mainCamera)
+        new control(mainCamera, this.renderer.domElement)
     }
 
-    // private render() {
-    //     const { scene, renderer, mainCamera } = this;
-    //     window.requestAnimationFrame(render);
-    //     function render() {
-    //         renderer.render(scene, mainCamera)
-    //         window.requestAnimationFrame(render);
-    //     }
-    // }
+    private render() {
+        const { scene, renderer, mainCamera } = this;
+        new Ground();
+        this.fps$.pipe(
+            tap(e => {
+                renderer.render(scene, mainCamera)
+            })
+        ).subscribe();
+    }
 }
+
+export default new Home();
+
 
 
 

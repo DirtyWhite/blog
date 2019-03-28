@@ -1,17 +1,16 @@
-import Home from './home';
+import home from './home';
 import { ImageUtils, RepeatWrapping, PlaneBufferGeometry, MeshLambertMaterial, DoubleSide, Mesh } from 'three';
 import { FLOOR_SIZE } from '@/baseConfig';
 
-export default class scene {
-    home = Home.instance;
+export default class Ground {
+
 
     constructor() {
-
         this.init();
     }
 
     init() {
-        const { scene } = this.home;
+        const { scene } = home;
         const floorPicSrc = require('../../images/floor.png') as string
         const floorTexture = ImageUtils.loadTexture(floorPicSrc)
         floorTexture.wrapS = RepeatWrapping
