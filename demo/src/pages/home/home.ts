@@ -1,6 +1,9 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, MeshDepthMaterial, BoxGeometry, Mesh, DirectionalLight, MeshLambertMaterial, MeshPhongMaterial, Vector3, ParametricGeometry, DoubleSide, FlatShading, PlaneGeometry, PlaneBufferGeometry, ImageUtils, RepeatWrapping, MirroredRepeatWrapping } from 'three/src/Three'
+import { Scene, PerspectiveCamera, WebGLRenderer, DirectionalLight } from 'three/src/Three'
 import control from "three-orbitcontrols";
-import { FLOOR_SIZE } from '@/baseConfig';
+import { FLOOR_SIZE, SPEED, FPS } from '@/baseConfig';
+import sceneBuilder from './scene'
+import { interval } from 'rxjs';
+import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
 require('./home.scss')
 
 export default class Home {
@@ -27,7 +30,16 @@ export default class Home {
     );
     readonly mainLight = new DirectionalLight(0xffffff, 1)
 
-    public init() {
+    private tick$ = interval(SPEED)
+
+    public fps$ = interval(1000 / FPS, animationFrame)
+
+
+    public main(): void {
+        this.init();
+    }
+
+    private init() {
         this.initRender();
         this.initCamera();
         this.initMainLight();
@@ -59,32 +71,19 @@ export default class Home {
         new control(mainLight, mainCamera)
     }
 
-    private render() {
-        const { scene, renderer, mainCamera } = this;
-        window.requestAnimationFrame(render);
-        function render() {
-            renderer.render(scene, mainCamera)
-            window.requestAnimationFrame(render);
-        }
-    }
+    // private render() {
+    //     const { scene, renderer, mainCamera } = this;
+    //     window.requestAnimationFrame(render);
+    //     function render() {
+    //         renderer.render(scene, mainCamera)
+    //         window.requestAnimationFrame(render);
+    //     }
+    // }
 }
 
 
 
-// async function generateFloor() {
-//     const floorPicSrc = require('../../images/floor.png') as string
-//     const floorTexture = ImageUtils.loadTexture(floorPicSrc)
-//     floorTexture.wrapS = RepeatWrapping
-//     floorTexture.wrapT = RepeatWrapping
-//     floorTexture.repeat.set(10, 10);
-//     const plane = new PlaneBufferGeometry(FLOOR_SIZE, FLOOR_SIZE);
-//     const planeMaterial = new MeshLambertMaterial({ side: DoubleSide, map: floorTexture });
-//     const ground = new Mesh(plane, planeMaterial)
-//     ground.rotation.x = Math.PI / 2
-//     ground.receiveShadow = true;
-//     scene.add(ground);
-// }
-// generateFloor();
+
 
 /**
  * 初始化一个物体

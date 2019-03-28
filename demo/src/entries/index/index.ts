@@ -4,4 +4,4 @@ __webpack_public_path__ = window["__webpack_public_path__"]
 import 'babel-polyfill';
 import Home from '@/pages/home/home';
 
-window.onload = Home.instance.init;
+window.onload = Home.instance.main;
