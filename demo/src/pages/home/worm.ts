@@ -1,5 +1,6 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, MeshDepthMaterial, BoxGeometry, Mesh, DirectionalLight, MeshLambertMaterial, MeshPhongMaterial, Vector3, ParametricGeometry, DoubleSide, FlatShading, PlaneGeometry, PlaneBufferGeometry, ImageUtils, RepeatWrapping, MirroredRepeatWrapping } from 'three/src/Three'
+import { Scene, PerspectiveCamera, WebGLRenderer, MeshDepthMaterial, BoxGeometry, Mesh, DirectionalLight, MeshLambertMaterial, MeshPhongMaterial, Vector3, ParametricGeometry, DoubleSide, FlatShading, PlaneGeometry, PlaneBufferGeometry, ImageUtils, RepeatWrapping, MirroredRepeatWrapping, MeshBasicMaterial, MeshStandardMaterial } from 'three/src/Three'
 import home from './home'
+import { FLOOR_SIZE } from '@/baseConfig';
 /**
  * 虫子类
  * 渲染
@@ -11,18 +12,18 @@ import home from './home'
 
 
 export default class Worm {
-
-
     constructor() {
         this.init();
     }
     init() {
         const { scene } = home
-        const gemotery = new BoxGeometry(3, 3, 3);
-        const material = new MeshLambertMaterial({ color: 0x0000ff })
+        const brickSrc = require('../../images/lava.png') as string;
+        const brickTexture = ImageUtils.loadTexture(brickSrc)
+        const gemotery = new BoxGeometry(10, 10, 10);
+        const material = new MeshStandardMaterial({ map: brickTexture })
         const cube = new Mesh(gemotery, material);
         cube.castShadow = true;
-        cube.position.y = 1.5
+        cube.position.set(FLOOR_SIZE / 4, 10 / 2, FLOOR_SIZE / 4)
         scene.add(cube);
     }
 

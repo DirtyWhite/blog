@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, DirectionalLight } from 'three/src/Three'
+import { Scene, PerspectiveCamera, WebGLRenderer, DirectionalLight, PointLight, AmbientLight } from 'three/src/Three'
 import control from "three-orbitcontrols";
 import { FLOOR_SIZE, SPEED, FPS } from '@/baseConfig';
 import Ground from './ground'
@@ -24,10 +24,12 @@ export class Home {
         45,
         parseFloat(this.rootStyle.width) / parseFloat(this.rootStyle.height),
         0.1,
-        3000
+        FLOOR_SIZE * 2
     );
-    readonly mainLight = new DirectionalLight(0xffffff, 1)
+    readonly mainLight = new PointLight(0xffffff, 10, FLOOR_SIZE);
 
+    worm: Worm
+    ground: Ground
 
 
     public readonly fps$ = interval(1000 / FPS, animationFrame).pipe(
@@ -55,26 +57,29 @@ export class Home {
 
     private initCamera() {
         const { mainCamera, scene } = this;
-        mainCamera.position.set(0, 10, FLOOR_SIZE);
+        mainCamera.position.set(0, FLOOR_SIZE * 2, 0);
+        mainCamera.lookAt(0, 0, 0);
         scene.add(mainCamera)
     }
 
     private initMainLight() {
         const { mainLight, scene } = this;
-        mainLight.position.set(10, 10, 10);
+        mainLight.position.set(0, FLOOR_SIZE / 2, 0);
         mainLight.castShadow = true;
         scene.add(mainLight);
+        var light = new AmbientLight(0x404040); // soft white light
+        scene.add(light);
     }
 
     private initControl() {
-        const { mainLight, mainCamera } = this;
+        const { mainCamera } = this;
         new control(mainCamera, this.renderer.domElement)
     }
 
     private render() {
         const { scene, renderer, mainCamera } = this;
-        new Ground();
-        new Worm();
+        this.ground = new Ground();
+        this.worm = new Worm();
         this.fps$.pipe(
             tap(e => {
                 renderer.render(scene, mainCamera)
