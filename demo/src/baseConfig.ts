@@ -14,7 +14,7 @@ export namespace pops {
     }
 }
 
-export const FLOOR_SIZE = 1000
+export const FLOOR_SIZE = 500
 
 export const SNAKE_LENGTH = 5;
 

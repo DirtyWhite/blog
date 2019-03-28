@@ -5,6 +5,7 @@ import Ground from './ground'
 import { interval } from 'rxjs';
 import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
 import { share, tap } from 'rxjs/operators';
+import Worm from './worm';
 require('./home.scss')
 
 export class Home {
@@ -73,6 +74,7 @@ export class Home {
     private render() {
         const { scene, renderer, mainCamera } = this;
         new Ground();
+        new Worm();
         this.fps$.pipe(
             tap(e => {
                 renderer.render(scene, mainCamera)
@@ -83,20 +85,6 @@ export class Home {
 
 export default new Home();
 
-
-
-
-
-
-/**
- * 初始化一个物体
- */
-// const gemotery = new BoxGeometry(3, 3, 3);
-// const material = new MeshLambertMaterial({ color: 0x0000ff })
-// const cube = new Mesh(gemotery, material);
-// cube.castShadow = true;
-// cube.position.y = 1.5
-// scene.add(cube);
 
 
 
