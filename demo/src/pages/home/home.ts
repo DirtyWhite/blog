@@ -3,87 +3,101 @@ import control from "three-orbitcontrols";
 import { FLOOR_SIZE } from '@/baseConfig';
 require('./style.scss')
 
-/**
- * 初始化场景
- */
-const root = document.querySelector('#canvas') as HTMLCanvasElement
-const rootStyle = window.getComputedStyle(root, null);
+export default class Home {
 
-const scene = new Scene();
+    private static readonly singleton = new Home();
 
-const camera = new PerspectiveCamera(45, parseFloat(rootStyle.width) / parseFloat(rootStyle.height), 0.1, 3000);
-camera.position.set(0, 10, FLOOR_SIZE);
+    public static get instance() {
+        return Home.singleton
+    }
 
-scene.add(camera)
+    private constructor() { }
 
-const light = new DirectionalLight(0xffffff, 1)
-light.position.set(10, 10, 10);
-light.castShadow = true;
-scene.add(light);
+    readonly root = document.querySelector('#canvas') as HTMLCanvasElement
+    readonly rootStyle = window.getComputedStyle(this.root, null);
+    readonly scene = new Scene();
+    readonly renderer = new WebGLRenderer({
+        canvas: this.root
+    });
+    readonly mainCamera = new PerspectiveCamera(
+        45,
+        parseFloat(this.rootStyle.width) / parseFloat(this.rootStyle.height),
+        0.1,
+        3000
+    );
+    readonly mainLight = new DirectionalLight(0xffffff, 1)
 
-const renderer = new WebGLRenderer({
-    canvas: root
-});
-renderer.setClearColor(0xeeeeee);
-renderer.setSize(parseFloat(rootStyle.width), parseFloat(rootStyle.height))
-renderer.shadowMap.enabled = true;
+    public init() {
+        this.initRender();
+        this.initCamera();
+        this.initMainLight();
+        this.initControl();
+    }
 
-new control(camera, renderer.domElement);
+    private initRender() {
+        const { rootStyle, renderer } = this;
+        renderer.setClearColor(0xeeeeee);
+        renderer.setSize(parseFloat(rootStyle.width), parseFloat(rootStyle.height))
+        renderer.shadowMap.enabled = true;
+    }
 
-/**
- * 初始化地板
- */
+    private initCamera() {
+        const { mainCamera, scene } = this;
+        mainCamera.position.set(0, 10, FLOOR_SIZE);
+        scene.add(mainCamera)
+    }
 
+    private initMainLight() {
+        const { mainLight, scene } = this;
+        mainLight.position.set(10, 10, 10);
+        mainLight.castShadow = true;
+        scene.add(mainLight);
+    }
 
+    private initControl() {
+        const { mainLight, mainCamera } = this;
+        new control(mainLight, mainCamera)
+    }
 
-async function generateFloor() {
-    const floorPicSrc = require('../../images/floor.png') as string
-    const floorTexture = ImageUtils.loadTexture(floorPicSrc)
-    floorTexture.wrapS = RepeatWrapping
-    floorTexture.wrapT = RepeatWrapping
-    floorTexture.repeat.set(10, 10);
-    const plane = new PlaneBufferGeometry(FLOOR_SIZE, FLOOR_SIZE);
-    const planeMaterial = new MeshLambertMaterial({ side: DoubleSide, map: floorTexture });
-    const ground = new Mesh(plane, planeMaterial)
-    ground.rotation.x = Math.PI / 2
-    ground.receiveShadow = true;
-    scene.add(ground);
+    private render() {
+        const { scene, renderer, mainCamera } = this;
+        window.requestAnimationFrame(render);
+        function render() {
+            renderer.render(scene, mainCamera)
+            window.requestAnimationFrame(render);
+        }
+    }
 }
-generateFloor();
+
+
+
+// async function generateFloor() {
+//     const floorPicSrc = require('../../images/floor.png') as string
+//     const floorTexture = ImageUtils.loadTexture(floorPicSrc)
+//     floorTexture.wrapS = RepeatWrapping
+//     floorTexture.wrapT = RepeatWrapping
+//     floorTexture.repeat.set(10, 10);
+//     const plane = new PlaneBufferGeometry(FLOOR_SIZE, FLOOR_SIZE);
+//     const planeMaterial = new MeshLambertMaterial({ side: DoubleSide, map: floorTexture });
+//     const ground = new Mesh(plane, planeMaterial)
+//     ground.rotation.x = Math.PI / 2
+//     ground.receiveShadow = true;
+//     scene.add(ground);
+// }
+// generateFloor();
 
 /**
  * 初始化一个物体
  */
-const gemotery = new BoxGeometry(3, 3, 3);
-const material = new MeshLambertMaterial({ color: 0x0000ff })
-const cube = new Mesh(gemotery, material);
-cube.castShadow = true;
-cube.position.y = 1.5
-scene.add(cube);
-
-
-function runCamera() {
-
-}
+// const gemotery = new BoxGeometry(3, 3, 3);
+// const material = new MeshLambertMaterial({ color: 0x0000ff })
+// const cube = new Mesh(gemotery, material);
+// cube.castShadow = true;
+// cube.position.y = 1.5
+// scene.add(cube);
 
 
 
 
-function animate() {
-    // camera.lookAt(0, 50, 0)
-    requestAnimationFrame(animate)
-}
 
-requestAnimationFrame(animate)
 
-/**
- * 渲染
- */
-const main = function () {
-    window.requestAnimationFrame(render);
-    function render() {
-        renderer.render(scene, camera)
-        window.requestAnimationFrame(render);
-    }
-}
-export default main;
