@@ -1,5 +1,5 @@
 import home from './home';
-import { ImageUtils, RepeatWrapping, PlaneBufferGeometry, MeshPhysicalMaterial, MeshLambertMaterial, DoubleSide, Mesh, PointLight, PointLightHelper, RGBA_ASTC_10x10_Format } from 'three';
+import { ImageUtils, RepeatWrapping, PlaneBufferGeometry, MeshPhysicalMaterial, MeshLambertMaterial, DoubleSide, Mesh, PointLight, PointLightHelper, RGBA_ASTC_10x10_Format, PlaneGeometry, MeshBasicMaterial } from 'three/src/Three';
 import { FLOOR_SIZE } from '@/baseConfig';
 
 export default class Ground {
@@ -17,8 +17,8 @@ export default class Ground {
         floorTexture.wrapS = RepeatWrapping
         floorTexture.wrapT = RepeatWrapping
         floorTexture.repeat.set(10, 10);
-        const plane = new PlaneBufferGeometry(FLOOR_SIZE, FLOOR_SIZE);
-        const planeMaterial = new MeshLambertMaterial({ side: DoubleSide, map: floorTexture });
+        const plane = new PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE);
+        const planeMaterial = new MeshBasicMaterial({ side: DoubleSide, map: floorTexture });
         const ground = new Mesh(plane, planeMaterial)
         ground.rotation.x = Math.PI / 2
         ground.receiveShadow = true;
@@ -39,7 +39,7 @@ export default class Ground {
             [0, FLOOR_SIZE / 4, -FLOOR_SIZE / 2, Math.PI],
         ]
         walls.map(([x, y, z, deg]) => {
-            const plane = new PlaneBufferGeometry(FLOOR_SIZE, FLOOR_SIZE / 2);
+            const plane = new PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE / 2);
             const wall = new Mesh(plane, wallMaterial);
             wall.position.set(x, y, z)
             wall.rotation.set(0, deg, 0);

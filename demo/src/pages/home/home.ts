@@ -1,4 +1,4 @@
-import { Scene, PerspectiveCamera, WebGLRenderer, DirectionalLight, PointLight, AmbientLight } from 'three/src/Three'
+import { PerspectiveCamera, ImageUtils, RepeatWrapping, Scene, PlaneBufferGeometry, MeshPhysicalMaterial, MeshLambertMaterial, DoubleSide, Mesh, PointLight, PointLightHelper, RGBA_ASTC_10x10_Format, PlaneGeometry, MeshBasicMaterial, BoxGeometry, WebGLRenderer, DirectionalLight, AmbientLight } from 'three/src/Three'
 import control from "three-orbitcontrols";
 import { FLOOR_SIZE, SPEED, FPS } from '@/baseConfig';
 import Ground from './ground'
@@ -11,7 +11,6 @@ require('./home.scss')
 export class Home {
 
     constructor() {
-
     }
 
     readonly root = document.querySelector('#canvas') as HTMLCanvasElement
@@ -57,7 +56,7 @@ export class Home {
 
     private initCamera() {
         const { mainCamera, scene } = this;
-        mainCamera.position.set(0, FLOOR_SIZE * 2, 0);
+        mainCamera.position.set(0, FLOOR_SIZE / 2, FLOOR_SIZE / 2);
         mainCamera.lookAt(0, 0, 0);
         scene.add(mainCamera)
     }
@@ -67,7 +66,7 @@ export class Home {
         mainLight.position.set(0, FLOOR_SIZE / 2, 0);
         mainLight.castShadow = true;
         scene.add(mainLight);
-        var light = new AmbientLight(0x404040); // soft white light
+        var light = new AmbientLight(0xffffff, .2);
         scene.add(light);
     }
 
@@ -77,18 +76,25 @@ export class Home {
     }
 
     private render() {
+
+
         const { scene, renderer, mainCamera } = this;
         this.ground = new Ground();
         this.worm = new Worm();
+
+
         this.fps$.pipe(
             tap(e => {
                 renderer.render(scene, mainCamera)
             })
         ).subscribe();
+
     }
 }
 
-export default new Home();
+const homeInstance = new Home();
+
+export default homeInstance;
 
 
 

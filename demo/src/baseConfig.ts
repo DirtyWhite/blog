@@ -25,8 +25,8 @@ export const SPEED = 1;
 export const FPS = 60;
 
 export const DIRECTIONS = {
-    37: { x: -1, y: 1 },
-    39: { x: 1, y: 0 },
-    38: { x: 0, y: -1 },
-    40: { x: 0, y: 1 }
+    37: { x: -1, y: 0, direc: 'left' },
+    39: { x: 1, y: 0, direc: 'right' },
+    38: { x: 0, y: -1, direc: 'top' },
+    40: { x: 0, y: 1, direc: 'bottom' }
 };
