@@ -87,7 +87,7 @@ export class Home {
         ).subscribe()
     }
     cameraIn() {
-        this.fps$.pipe(
+        return this.fps$.pipe(
             take(3000 / 60),
             tap(e => {
                 let { position } = this.worm.instance;
@@ -114,7 +114,7 @@ export class Home {
         this.ground = new Ground();
         this.worm = new Worm();
         this.cameraIn();
-
+        // this.cameraFollow(this.worm.instance, this.mainCamera)
         this.fps$.pipe(
             tap(e => {
                 renderer.render(scene, mainCamera)

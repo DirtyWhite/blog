@@ -1,8 +1,8 @@
 import { Scene, PerspectiveCamera, WebGLRenderer, MeshDepthMaterial, BoxGeometry, Mesh, DirectionalLight, MeshLambertMaterial, MeshPhongMaterial, Vector3, ParametricGeometry, DoubleSide, FlatShading, PlaneGeometry, PlaneBufferGeometry, ImageUtils, RepeatWrapping, MirroredRepeatWrapping, MeshBasicMaterial, MeshStandardMaterial } from 'three/src/Three'
 import home from './home'
-import { FLOOR_SIZE, DIRECTIONS } from '@/baseConfig';
-import { fromEvent } from 'rxjs';
-import { map, tap, take, takeUntil, buffer } from 'rxjs/operators';
+import { FLOOR_SIZE, DIRECTIONS, FPS, SPEED } from '@/baseConfig';
+import { fromEvent, interval } from 'rxjs';
+import { map, tap, take, takeUntil, buffer, throttle, throttleTime, mergeMap } from 'rxjs/operators';
 
 /**
  * 虫子类
@@ -16,11 +16,20 @@ import { map, tap, take, takeUntil, buffer } from 'rxjs/operators';
 
 export default class Worm {
 
-
-
     key$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
         map(e => e.keyCode)
-    );
+    )
+
+    move$ = this.key$.pipe(
+        take(1),
+        mergeMap(e => {
+            return home.fps$.pipe(
+                throttleTime(500),
+                map(val => SPEED),
+                tap(e => this.instance.position.z -= e)
+            )
+        })
+    ).subscribe();
 
     direction$ = this.key$.pipe(
         tap(console.log),
@@ -28,7 +37,7 @@ export default class Worm {
     )
 
     control$ = this.direction$.pipe(
-        tap(e => this.move(e))
+        tap(e => this.turn(e))
     ).subscribe();
 
     constructor() {
@@ -36,9 +45,9 @@ export default class Worm {
     }
     instance: Mesh
 
-    move(direc: typeof DIRECTIONS[37]) {
-        this.instance.position.x += direc.x;
-        this.instance.position.z += direc.y;
+    turn(direc: typeof DIRECTIONS[37]) {
+        // this.instance.position.x += direc.x;
+        // this.instance.position.z += direc.y;
     }
     init() {
         const { scene } = home
