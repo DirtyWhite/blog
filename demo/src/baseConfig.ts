@@ -30,3 +30,5 @@ export const DIRECTIONS = {
     38: { x: 0, y: -1, direc: 'top' },
     40: { x: 0, y: 1, direc: 'bottom' }
 };
+
+export const cameraOffset = [0, 50, 100];

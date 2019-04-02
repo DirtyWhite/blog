@@ -2,7 +2,7 @@ import { Scene, PerspectiveCamera, WebGLRenderer, MeshDepthMaterial, BoxGeometry
 import home from './home'
 import { FLOOR_SIZE, DIRECTIONS } from '@/baseConfig';
 import { fromEvent } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, tap, take, takeUntil, buffer } from 'rxjs/operators';
 
 /**
  * 虫子类
@@ -16,12 +16,15 @@ import { map, tap } from 'rxjs/operators';
 
 export default class Worm {
 
+
+
     key$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
         map(e => e.keyCode)
     );
 
     direction$ = this.key$.pipe(
-        map(keyCode => DIRECTIONS[keyCode])
+        tap(console.log),
+        map((keyCode) => DIRECTIONS[keyCode])
     )
 
     control$ = this.direction$.pipe(

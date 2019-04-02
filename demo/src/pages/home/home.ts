@@ -1,10 +1,10 @@
-import { PerspectiveCamera, ImageUtils, RepeatWrapping, Scene, PlaneBufferGeometry, MeshPhysicalMaterial, MeshLambertMaterial, DoubleSide, Mesh, PointLight, PointLightHelper, RGBA_ASTC_10x10_Format, PlaneGeometry, MeshBasicMaterial, BoxGeometry, WebGLRenderer, DirectionalLight, AmbientLight } from 'three/src/Three'
+import { PerspectiveCamera, ImageUtils, RepeatWrapping, Scene, PlaneBufferGeometry, MeshPhysicalMaterial, MeshLambertMaterial, DoubleSide, Mesh, PointLight, PointLightHelper, RGBA_ASTC_10x10_Format, PlaneGeometry, MeshBasicMaterial, BoxGeometry, WebGLRenderer, DirectionalLight, AmbientLight, Camera, Vector3 } from 'three/src/Three'
 import control from "three-orbitcontrols";
-import { FLOOR_SIZE, SPEED, FPS } from '@/baseConfig';
+import { FLOOR_SIZE, SPEED, FPS, cameraOffset } from '@/baseConfig';
 import Ground from './ground'
 import { interval } from 'rxjs';
 import { animationFrame } from 'rxjs/internal/scheduler/animationFrame';
-import { share, tap } from 'rxjs/operators';
+import { share, tap, take, delay } from 'rxjs/operators';
 import Worm from './worm';
 require('./home.scss')
 
@@ -44,7 +44,7 @@ export class Home {
         this.initRender();
         this.initCamera();
         this.initMainLight();
-        this.initControl();
+        // this.initControl();
     }
 
     private initRender() {
@@ -70,6 +70,38 @@ export class Home {
         scene.add(light);
     }
 
+    private cameraFollow(object: Mesh, camera: Camera) {
+        this.fps$.pipe(
+            tap(e => {
+                let curPosition = object.position;
+                const Offset = new Vector3(0, 50, 100);
+                camera.lookAt(curPosition)
+                let target = curPosition;
+                let endPos = new Vector3(
+                    curPosition.x + Offset.x,
+                    curPosition.y + Offset.y,
+                    curPosition.z + Offset.z
+                )
+                camera.position.lerp(endPos, .1);
+            })
+        ).subscribe()
+    }
+    cameraIn() {
+        this.fps$.pipe(
+            take(3000 / 60),
+            tap(e => {
+                let { position } = this.worm.instance;
+                this.mainCamera.position.lerp(
+                    new Vector3(
+                        position.x + cameraOffset[0],
+                        position.y + cameraOffset[1],
+                        position.z + cameraOffset[2],
+                    ), .1);
+                this.mainCamera.lookAt(position)
+            })
+        ).subscribe()
+    }
+
     private initControl() {
         const { mainCamera } = this;
         new control(mainCamera, this.renderer.domElement)
@@ -81,7 +113,7 @@ export class Home {
         const { scene, renderer, mainCamera } = this;
         this.ground = new Ground();
         this.worm = new Worm();
-
+        this.cameraIn();
 
         this.fps$.pipe(
             tap(e => {

@@ -18,7 +18,7 @@ export default class Ground {
         floorTexture.wrapT = RepeatWrapping
         floorTexture.repeat.set(10, 10);
         const plane = new PlaneGeometry(FLOOR_SIZE, FLOOR_SIZE);
-        const planeMaterial = new MeshBasicMaterial({ side: DoubleSide, map: floorTexture });
+        const planeMaterial = new MeshLambertMaterial({ side: DoubleSide, map: floorTexture });
         const ground = new Mesh(plane, planeMaterial)
         ground.rotation.x = Math.PI / 2
         ground.receiveShadow = true;
